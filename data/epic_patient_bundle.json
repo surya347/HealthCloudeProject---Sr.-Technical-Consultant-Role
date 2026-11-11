@@ -1,0 +1,1844 @@
+{
+  "resourceType": "Bundle",
+  "type": "transaction",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100001",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100001"
+          }
+        ],
+        "name": [
+          {
+            "family": "Nair",
+            "given": [
+              "Aarav"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1951-12-09",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010000"
+          },
+          {
+            "system": "email",
+            "value": "aarav.patient0@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100001-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100001"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2016-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100001-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100001"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2016-07-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100001-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-04-17T09:00:00Z",
+        "valueQuantity": {
+          "value": 6.3,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100001-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100001"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-12-18T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.0,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100002",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100002"
+          }
+        ],
+        "name": [
+          {
+            "family": "Singh",
+            "given": [
+              "Priya"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1985-04-23",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010001"
+          },
+          {
+            "system": "email",
+            "value": "priya.patient1@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Chennai",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100002-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100002"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2019-01-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100002-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100002"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2017-07-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100002-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-07-27T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.2,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100002-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100002"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-03-29T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.0,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100003",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100003"
+          }
+        ],
+        "name": [
+          {
+            "family": "Iyer",
+            "given": [
+              "Rohan"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1956-02-13",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010002"
+          },
+          {
+            "system": "email",
+            "value": "rohan.patient2@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Pune",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100003-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100003"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2019-01-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100003-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-10-21T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.9,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100003-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100003"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-06-23T09:00:00Z",
+        "valueQuantity": {
+          "value": 6.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100004",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100004"
+          }
+        ],
+        "name": [
+          {
+            "family": "Das",
+            "given": [
+              "Ananya"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1955-09-10",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010003"
+          },
+          {
+            "system": "email",
+            "value": "ananya.patient3@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Pune",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100004-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100004"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2016-01-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100004-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-08-25T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.0,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100004-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100004"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-04-27T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.7,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100005",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100005"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rao",
+            "given": [
+              "Vikram"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1956-07-09",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010004"
+          },
+          {
+            "system": "email",
+            "value": "vikram.patient4@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Pune",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100005-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100005"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2020-04-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100005-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100005"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2019-02-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100005-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-11-21T09:00:00Z",
+        "valueQuantity": {
+          "value": 8.5,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100005-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100005"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-07-24T09:00:00Z",
+        "valueQuantity": {
+          "value": 8.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100006",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100006"
+          }
+        ],
+        "name": [
+          {
+            "family": "Gupta",
+            "given": [
+              "Meera"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1960-08-13",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010005"
+          },
+          {
+            "system": "email",
+            "value": "meera.patient5@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100006-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100006"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2015-04-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100006-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100006"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-10-14T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100006-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100006"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-06-16T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100007",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100007"
+          }
+        ],
+        "name": [
+          {
+            "family": "Menon",
+            "given": [
+              "Arjun"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1963-10-23",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010006"
+          },
+          {
+            "system": "email",
+            "value": "arjun.patient6@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100007-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100007"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2021-08-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100007-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100007"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-03-20T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.2,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100007-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100007"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-11-20T09:00:00Z",
+        "valueQuantity": {
+          "value": 7.1,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100008",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100008"
+          }
+        ],
+        "name": [
+          {
+            "family": "Patel",
+            "given": [
+              "Kavya"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1987-07-19",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010007"
+          },
+          {
+            "system": "email",
+            "value": "kavya.patient7@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Pune",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100008-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100008"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2017-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100008-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100008"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2022-02-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100008-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100008"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-10-10T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.3,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100008-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100008"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-06-12T09:00:00Z",
+        "valueQuantity": {
+          "value": 6.8,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100009",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100009"
+          }
+        ],
+        "name": [
+          {
+            "family": "Iyer",
+            "given": [
+              "Rahul"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1993-07-20",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010008"
+          },
+          {
+            "system": "email",
+            "value": "rahul.patient8@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Chennai",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100009-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100009"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2022-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100009-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100009"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2019-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100009-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100009"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-04-23T09:00:00Z",
+        "valueQuantity": {
+          "value": 8.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100009-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100009"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2025-12-24T09:00:00Z",
+        "valueQuantity": {
+          "value": 6.6,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100010",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100010"
+          }
+        ],
+        "name": [
+          {
+            "family": "Gupta",
+            "given": [
+              "Sneha"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1991-06-04",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010009"
+          },
+          {
+            "system": "email",
+            "value": "sneha.patient9@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Chennai",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100010-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100010"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "44054006",
+              "display": "Type 2 diabetes mellitus"
+            }
+          ]
+        },
+        "onsetDateTime": "2015-05-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100010-COND-2",
+        "subject": {
+          "reference": "Patient/EPIC-100010"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2023-03-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100010-A1C-1",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100010"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-06-15T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.5,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Observation",
+        "id": "EPIC-100010-A1C-2",
+        "status": "final",
+        "subject": {
+          "reference": "Patient/EPIC-100010"
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4548-4",
+              "display": "Hemoglobin A1c"
+            }
+          ]
+        },
+        "effectiveDateTime": "2026-02-15T09:00:00Z",
+        "valueQuantity": {
+          "value": 9.3,
+          "unit": "%"
+        }
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100011",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100011"
+          }
+        ],
+        "name": [
+          {
+            "family": "Nair",
+            "given": [
+              "Karan"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1990-09-20",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010010"
+          },
+          {
+            "system": "email",
+            "value": "karan.patient10@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100011-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100011"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2017-09-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100012",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100012"
+          }
+        ],
+        "name": [
+          {
+            "family": "Sharma",
+            "given": [
+              "Isha"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1988-06-16",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010011"
+          },
+          {
+            "system": "email",
+            "value": "isha.patient11@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Bengaluru",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100013",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100013"
+          }
+        ],
+        "name": [
+          {
+            "family": "Das",
+            "given": [
+              "Aditya"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1965-01-08",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010012"
+          },
+          {
+            "system": "email",
+            "value": "aditya.patient12@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Bengaluru",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100013-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100013"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2022-02-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100014",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100014"
+          }
+        ],
+        "name": [
+          {
+            "family": "Singh",
+            "given": [
+              "Pooja"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1958-11-16",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010013"
+          },
+          {
+            "system": "email",
+            "value": "pooja.patient13@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100014-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100014"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2021-04-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100015",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100015"
+          }
+        ],
+        "name": [
+          {
+            "family": "Menon",
+            "given": [
+              "Nikhil"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1995-05-13",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010014"
+          },
+          {
+            "system": "email",
+            "value": "nikhil.patient14@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Chennai",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100016",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100016"
+          }
+        ],
+        "name": [
+          {
+            "family": "Iyer",
+            "given": [
+              "Divya"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1957-04-08",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010015"
+          },
+          {
+            "system": "email",
+            "value": "divya.patient15@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Pune",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100016-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100016"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2023-04-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100017",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100017"
+          }
+        ],
+        "name": [
+          {
+            "family": "Sharma",
+            "given": [
+              "Sanjay"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1950-02-23",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010016"
+          },
+          {
+            "system": "email",
+            "value": "sanjay.patient16@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100017-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100017"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2015-06-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100018",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100018"
+          }
+        ],
+        "name": [
+          {
+            "family": "Rao",
+            "given": [
+              "Neha"
+            ]
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1982-04-09",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010017"
+          },
+          {
+            "system": "email",
+            "value": "neha.patient17@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100019",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100019"
+          }
+        ],
+        "name": [
+          {
+            "family": "Patel",
+            "given": [
+              "Manish"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1965-08-26",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010018"
+          },
+          {
+            "system": "email",
+            "value": "manish.patient18@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Hyderabad",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100019-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100019"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2021-06-15"
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Patient",
+        "id": "EPIC-100020",
+        "identifier": [
+          {
+            "system": "urn:epic:mrn",
+            "value": "EPIC-100020"
+          }
+        ],
+        "name": [
+          {
+            "family": "Sharma",
+            "given": [
+              "Ritu"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1976-08-28",
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "+91 9000010019"
+          },
+          {
+            "system": "email",
+            "value": "ritu.patient19@example.com"
+          }
+        ],
+        "address": [
+          {
+            "city": "Bengaluru",
+            "country": "IN"
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "Condition",
+        "id": "EPIC-100020-COND-1",
+        "subject": {
+          "reference": "Patient/EPIC-100020"
+        },
+        "clinicalStatus": {
+          "coding": [
+            {
+              "code": "active"
+            }
+          ]
+        },
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "38341003",
+              "display": "Hypertension"
+            }
+          ]
+        },
+        "onsetDateTime": "2020-02-15"
+      }
+    }
+  ]
+}

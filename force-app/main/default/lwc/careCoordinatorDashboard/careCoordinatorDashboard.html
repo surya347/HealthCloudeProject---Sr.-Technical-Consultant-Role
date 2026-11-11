@@ -1,0 +1,40 @@
+<template>
+    <lightning-card title="Care Coordinator Dashboard" icon-name="standard:care_request_reviewer">
+        <lightning-button-icon slot="actions" icon-name="utility:refresh" alternative-text="Refresh"
+            onclick={handleRefresh}></lightning-button-icon>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading patients" size="small"></lightning-spinner>
+        </template>
+
+        <template lwc:if={error}>
+            <div class="slds-p-horizontal_medium slds-text-color_error">{error}</div>
+        </template>
+
+        <template lwc:if={summary}>
+            <div class="slds-grid slds-gutters slds-p-horizontal_medium slds-m-bottom_medium">
+                <template for:each={tiles} for:item="tile">
+                    <div key={tile.label} class="slds-col">
+                        <div class={tile.boxClass}>
+                            <p class="slds-text-title_caps">{tile.label}</p>
+                            <p class="slds-text-heading_large">{tile.value}</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <div class="slds-p-horizontal_medium slds-m-bottom_small">
+                <lightning-input type="toggle" label="Show only open care gaps" checked={showOnlyGaps}
+                    message-toggle-active="" message-toggle-inactive="" onchange={handleToggle}></lightning-input>
+            </div>
+
+            <template lwc:if={hasRows}>
+                <lightning-datatable key-field="id" data={rows} columns={columns} hide-checkbox-column
+                    onrowaction={handleRowAction}></lightning-datatable>
+            </template>
+            <template lwc:else>
+                <p class="slds-p-around_medium">No patients to show. Load the sample data and run the care-gap job first.</p>
+            </template>
+        </template>
+    </lightning-card>
+</template>

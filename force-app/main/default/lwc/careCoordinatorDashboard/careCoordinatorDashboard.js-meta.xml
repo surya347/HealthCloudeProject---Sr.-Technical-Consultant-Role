@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>64.0</apiVersion>
+    <description>Risk-ranked worklist of diabetic patients with open care gaps and outreach actions.</description>
+    <isExposed>true</isExposed>
+    <masterLabel>Care Coordinator Dashboard</masterLabel>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightning__Tab</target>
+    </targets>
+</LightningComponentBundle>

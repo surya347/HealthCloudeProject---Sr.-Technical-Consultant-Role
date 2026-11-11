@@ -1,0 +1,163 @@
+<!--
+    programEnrollmentWizard.html
+    Placed on the Account (patient) record page. recordId comes from the page automatically.
+    Responsive: program tiles use CSS grid (1 column on phones, 2 on wider screens).
+-->
+<template>
+    <lightning-card class="enrol-card">
+        <!-- Header -->
+        <div class="hero">
+            <lightning-icon icon-name="standard:care_request_reviewer" size="medium" alternative-text="Enrol in program"></lightning-icon>
+            <div>
+                <h2 class="hero__title">Enrol in a care program</h2>
+                <template lwc:if={context}><p class="hero__subtitle">{context.patientName}</p></template>
+            </div>
+        </div>
+
+        <!-- Loading / errors -->
+        <template lwc:if={isLoading}>
+            <div class="slds-is-relative loading"><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></div>
+        </template>
+        <template lwc:if={loadError}>
+            <p class="slds-p-around_medium slds-text-color_error">{loadError}</p>
+        </template>
+        <template lwc:if={notAPatient}>
+            <p class="slds-p-around_medium slds-text-color_weak">Program enrolment is only available on patient (person account) records.</p>
+        </template>
+
+        <template lwc:if={isPatient}>
+            <!-- Current programs: always visible so the coordinator has context -->
+            <div class="slds-p-horizontal_medium slds-p-top_small">
+                <div class="current">
+                    <span class="current__label">
+                        Current programs
+                        <lightning-helptext content="Programs this patient is already enrolled in (Care Program Enrollee records)."></lightning-helptext>
+                    </span>
+                    <template lwc:if={hasCurrentEnrollments}>
+                        <div class="badges">
+                            <template for:each={currentEnrollments} for:item="e">
+                                <span key={e.enrolleeId} class={e.badgeClass} title={e.status}>{e.programName} · {e.status}</span>
+                            </template>
+                        </div>
+                    </template>
+                    <template lwc:else><span class="slds-text-color_weak">None yet</span></template>
+                </div>
+            </div>
+
+            <template lwc:if={showWizard}>
+                <div class="slds-p-horizontal_medium slds-p-top_medium">
+                    <lightning-progress-indicator current-step={currentStep} type="path" variant="base">
+                        <template for:each={steps} for:item="s">
+                            <lightning-progress-step key={s.value} label={s.label} value={s.value}></lightning-progress-step>
+                        </template>
+                    </lightning-progress-indicator>
+                </div>
+
+                <div class="slds-p-around_medium step-body">
+                    <p class="step-counter">{stepCounter}</p>
+                    <h3 class="step-title" aria-live="polite">{activeStep.title}</h3>
+                    <div class="tip">
+                        <lightning-icon icon-name="utility:info" size="x-small"></lightning-icon>
+                        <span>{activeStep.tip}</span>
+                    </div>
+
+                    <!-- STEP 1: program tiles (role="button" + tabindex so they work with the keyboard) -->
+                    <template lwc:if={isStep1}>
+                        <template lwc:if={noProgramsLeft}>
+                            <div class="empty">
+                                <lightning-icon icon-name="utility:success" variant="success" size="small"></lightning-icon>
+                                <span>This patient is already in every active program.</span>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <div class="tiles" role="list">
+                                <template for:each={programTiles} for:item="p">
+                                    <div key={p.id} class={p.tileClass} role="button" tabindex="0" aria-pressed={p.ariaPressed}
+                                        data-id={p.id} onclick={handleSelectProgram} onkeydown={handleTileKey}>
+                                        <div class="program-tile__head">
+                                            <span class="program-tile__name">{p.name}</span>
+                                            <template lwc:if={p.selected}>
+                                                <lightning-icon icon-name="utility:check" size="x-small" variant="inverse" class="program-tile__check"></lightning-icon>
+                                            </template>
+                                        </div>
+                                        <p class="program-tile__desc">{p.description}</p>
+                                        <p class="program-tile__dates">{p.dates}</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </template>
+
+                    <!-- STEP 2: consent -->
+                    <template lwc:if={isStep2}>
+                        <div class="consent-text">
+                            <p class="consent-text__title">Care Program Participation Consent — {selectedProgramName}</p>
+                            <p>I agree to join this care program. My care team may review my health information, contact me about tests and
+                                appointments, and share information with my doctors to coordinate my care. I can withdraw at any time.</p>
+                        </div>
+                        <lightning-layout multiple-rows>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-input type="checkbox" label="Patient gives program consent" checked={form.programConsent} required
+                                    data-field="programConsent" message-when-value-missing="Consent is required to enrol the patient."
+                                    field-level-help="Required. Saved as a signed Authorization Form Consent linked to this new enrolment." onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-input type="checkbox" label="OK to contact by phone / SMS" checked={form.contactConsent}
+                                    data-field="contactConsent" field-level-help="Optional. Controls phone and SMS outreach for this program." onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-combobox label="How was consent captured?" value={form.capturedSource} options={consentSources} required
+                                    data-field="capturedSource" field-level-help="Kept for audit. Example: Phone if you read the text on a call." onchange={handleChange}></lightning-combobox>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+
+                    <!-- STEP 3: extras + review -->
+                    <template lwc:if={isStep3}>
+                        <lightning-layout multiple-rows>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-combobox label="Care plan template" value={carePlanValue} options={carePlanOptions} data-field="carePlanTemplateId"
+                                    field-level-help="Optional. Creates a care coordination case and an active care plan. Example: Hypertension Care Plan" onchange={handleChange}></lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                                <lightning-input type="toggle" label="Schedule a welcome call" checked={form.scheduleWelcomeCall} data-field="scheduleWelcomeCall"
+                                    message-toggle-active="Yes" message-toggle-inactive="No" field-level-help="Creates a task due in 2 days." onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                        <div class="review">
+                            <dl>
+                                <dt>Program</dt><dd>{selectedProgramName} <lightning-button variant="base" label="Edit" data-step="1" onclick={handleEdit}></lightning-button></dd>
+                                <dt>Program consent</dt><dd><span class="pill">Given</span> via {consentSourceLabel} <lightning-button variant="base" label="Edit" data-step="2" onclick={handleEdit}></lightning-button></dd>
+                                <dt>Phone / SMS</dt><dd>{yesNoContact}</dd>
+                                <dt>Care plan</dt><dd>{carePlanLabel}</dd>
+                                <dt>Welcome call</dt><dd>{yesNoWelcome}</dd>
+                            </dl>
+                        </div>
+                    </template>
+                </div>
+
+                <div slot="footer" class="footer">
+                    <template lwc:if={isSaving}><lightning-spinner alternative-text="Enrolling" size="small"></lightning-spinner></template>
+                    <lightning-button label="Back" icon-name="utility:chevronleft" onclick={handleBack} disabled={isFirstStep}></lightning-button>
+                    <template lwc:if={isLastStep}>
+                        <lightning-button variant="brand" label="Enrol" icon-name="utility:check" icon-position="right" onclick={handleEnroll} disabled={isSaving}></lightning-button>
+                    </template>
+                    <template lwc:else>
+                        <lightning-button variant="brand" label="Next" icon-name="utility:chevronright" icon-position="right" onclick={handleNext} disabled={noProgramsLeft}></lightning-button>
+                    </template>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class="success">
+                    <div class="success__badge"><lightning-icon icon-name="utility:success" variant="inverse" size="small"></lightning-icon></div>
+                    <h3 class="success__title">Enrolled in {result.programName}</h3>
+                    <p class="slds-text-color_weak">{result.consentsCreated} consent record(s) saved and linked to the new enrolment.</p>
+                    <div class="success__actions">
+                        <lightning-button variant="brand" label="View enrolment" onclick={handleViewEnrollment}></lightning-button>
+                        <lightning-button label="Enrol in another program" onclick={handleStartOver}></lightning-button>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </lightning-card>
+</template>

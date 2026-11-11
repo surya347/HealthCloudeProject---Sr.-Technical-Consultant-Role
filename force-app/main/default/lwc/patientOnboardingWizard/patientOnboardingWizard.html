@@ -1,0 +1,322 @@
+<!--
+    patientOnboardingWizard.html
+    ............................................................................................
+    Layout tips used here:
+      - lightning-layout + lightning-layout-item with size="12" medium-device-size="6"
+        large-device-size="4" = 1 column on phones, 2 on tablets, 3 on desktops (responsive).
+      - Only the current step is rendered (lwc:if), so validation only checks fields on screen.
+      - Every input has field-level-help (the little "i" icon) explaining what to enter and why.
+      - data-section / data-field tell the JS which part of the form an input updates.
+-->
+<template>
+    <lightning-card class="wizard-card">
+        <!-- ================================================= Header banner -->
+        <div class="wizard-top">
+            <div class="hero">
+                <div class="hero__icon">
+                    <lightning-icon icon-name="standard:patient_service" size="large" alternative-text="Patient onboarding"></lightning-icon>
+                </div>
+                <div class="hero__text">
+                    <h2 class="hero__title">{cardTitle}</h2>
+                    <p class="hero__subtitle">
+                        Register the patient, capture history, social needs and consent, then enrol them in a care program — all in one save.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shown if the setup data (programs, templates) could not load -->
+        <template lwc:if={setupError}>
+            <div class="slds-m-around_medium slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <span>Could not load onboarding options: {setupError}</span>
+            </div>
+        </template>
+
+        <!-- ================================================= Wizard -->
+        <template lwc:if={showWizard}>
+            <div class="slds-p-horizontal_medium slds-p-top_medium">
+                <!-- Progress: "path" style on desktop, plus a simple counter + bar that reads well on phones -->
+                <lightning-progress-indicator current-step={currentStep} type="path" variant="base" class="slds-show_medium">
+                    <template for:each={steps} for:item="step">
+                        <lightning-progress-step key={step.value} label={step.label} value={step.value}></lightning-progress-step>
+                    </template>
+                </lightning-progress-indicator>
+
+                <div class="mobile-progress slds-hide_medium">
+                    <div class="mobile-progress__label">{stepCounter} · {activeStep.label}</div>
+                    <div class="mobile-progress__track"><div class="mobile-progress__bar" style={progressStyle}></div></div>
+                </div>
+            </div>
+
+            <div class="slds-p-around_medium step-body">
+                <!-- Step heading + tip box (help text for the whole step) -->
+                <div class="step-header">
+                    <lightning-icon icon-name={activeStep.icon} size="small" class="slds-m-right_small"></lightning-icon>
+                    <div>
+                        <p class="step-header__counter">{stepCounter}</p>
+                        <h3 class="step-header__title" aria-live="polite">{activeStep.title}</h3>
+                    </div>
+                </div>
+                <div class="tip">
+                    <lightning-icon icon-name="utility:info" size="x-small" variant="inverse" class="tip__icon"></lightning-icon>
+                    <span>{activeStep.tip}</span>
+                </div>
+
+                <!-- ============================================ STEP 1: Patient -->
+                <template lwc:if={isStep1}>
+                    <template lwc:if={isExistingPatient}>
+                        <div class="selected-patient">
+                            <lightning-icon icon-name="utility:success" variant="success" size="small"></lightning-icon>
+                            <div class="selected-patient__text">
+                                <strong>{selectedPatientName}</strong> will be onboarded. Their existing record is kept as is.
+                            </div>
+                            <lightning-button variant="base" label="Change" onclick={handleClearMatch}></lightning-button>
+                        </div>
+                    </template>
+                    <template lwc:else>
+                        <lightning-layout multiple-rows>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input label="First name" value={form.patient.firstName} data-section="patient" data-field="firstName"
+                                    max-length="40" field-level-help="Patient's given name as on their ID. Example: Leela" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input label="Last name" value={form.patient.lastName} data-section="patient" data-field="lastName" required
+                                    max-length="80" field-level-help="Family name. Used with date of birth for the duplicate check. Example: Joshi" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input type="date" label="Date of birth" value={form.patient.birthDate} data-section="patient" data-field="birthDate" required
+                                    max={today} message-when-range-overflow="Date of birth cannot be in the future."
+                                    field-level-help="Needed to verify identity (the Agentforce agent also checks MRN + date of birth). Example: 02/03/1979" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input label="Medical record number (MRN)" value={form.patient.mrn} data-section="patient" data-field="mrn"
+                                    max-length="40" field-level-help="The EHR (Epic) MRN, if the patient has one. It must be unique. Example: EPIC-100021" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input type="tel" label="Mobile phone" value={form.patient.phone} data-section="patient" data-field="phone"
+                                    pattern={phonePattern} message-when-pattern-mismatch="Use digits, spaces, +, - or brackets only."
+                                    field-level-help="Used for reminders and the welcome call. Example: +91 98765 43210" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input type="email" label="Email" value={form.patient.email} data-section="patient" data-field="email"
+                                    field-level-help="Optional. For portal invites and appointment letters. Example: leela.joshi@example.com" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                                <lightning-input label="City" value={form.patient.city} data-section="patient" data-field="city"
+                                    field-level-help="Helps match the patient to a nearby clinic or lab. Example: Pune" onchange={handleChange}></lightning-input>
+                            </lightning-layout-item>
+                        </lightning-layout>
+
+                        <!-- Duplicate check -->
+                        <div class="dup-check">
+                            <div class="dup-check__head">
+                                <div>
+                                    <p class="dup-check__title">Check for an existing patient</p>
+                                    <p class="slds-text-color_weak">Searches by MRN, or by last name + date of birth.</p>
+                                </div>
+                                <lightning-button label="Search" icon-name="utility:search" onclick={handleSearch} disabled={isSearching}></lightning-button>
+                            </div>
+                            <template lwc:if={isSearching}>
+                                <div class="slds-is-relative dup-check__spinner"><lightning-spinner size="small" alternative-text="Searching"></lightning-spinner></div>
+                            </template>
+                            <template lwc:if={hasMatches}>
+                                <ul class="match-list">
+                                    <template for:each={matches} for:item="m">
+                                        <li key={m.id} class="match">
+                                            <lightning-icon icon-name="standard:person_account" size="small"></lightning-icon>
+                                            <div class="match__info">
+                                                <strong>{m.name}</strong>
+                                                <span class="slds-text-color_weak">MRN {m.mrn} · DOB {m.birthDate} · {m.city}</span>
+                                            </div>
+                                            <lightning-button label="Use this patient" variant="brand-outline" data-id={m.id} onclick={handleSelectMatch}></lightning-button>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </template>
+                            <template lwc:if={noMatchesFound}>
+                                <p class="no-match"><lightning-icon icon-name="utility:check" size="x-small" variant="success"></lightning-icon> No existing patient found — a new record will be created.</p>
+                            </template>
+                        </div>
+                    </template>
+                </template>
+
+                <!-- ============================================ STEP 2: Clinical -->
+                <template lwc:if={isStep2}>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" padding="around-small">
+                            <div class="label-with-help">
+                                <span class="slds-form-element__label">Diagnoses</span>
+                                <lightning-helptext content="Tick each condition the patient has been diagnosed with. Each one is saved as a Health Condition with its SNOMED CT code (for example 44054006 = type 2 diabetes)."></lightning-helptext>
+                            </div>
+                            <lightning-checkbox-group name="conditions" label="Diagnoses" variant="label-hidden" options={setup.conditions}
+                                value={form.clinical.conditionCodes} data-section="clinical" data-field="conditionCodes" onchange={handleDetailChange}
+                                class="condition-group"></lightning-checkbox-group>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                            <lightning-input type="date" label="Diagnosed on (approx.)" value={form.clinical.onsetDate} data-section="clinical" data-field="onsetDate"
+                                max={today} field-level-help="Approximate date of diagnosis. A rough date is fine, e.g. 01/06/2024." onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                            <lightning-input type="number" label="Latest HbA1c (%)" value={form.clinical.hba1cValue} data-section="clinical" data-field="hba1cValue"
+                                step="0.1" min="3" max="20" message-when-range-underflow="HbA1c is usually 3% or more." message-when-range-overflow="HbA1c above 20% is not realistic — check the value."
+                                field-level-help="Average blood sugar over ~3 months. Below 5.7% normal, 5.7–6.4% prediabetes, 6.5%+ diabetes. Example: 8.1" onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                            <lightning-input type="date" label="HbA1c test date" value={form.clinical.hba1cDate} data-section="clinical" data-field="hba1cDate"
+                                max={today} field-level-help="When the sample was taken. Over 180 days ago means a care gap will be flagged tonight." onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+
+                <!-- ============================================ STEP 3: SDOH -->
+                <template lwc:if={isStep3}>
+                    <div class="sdoh-grid">
+                        <template for:each={sdohQuestions} for:item="q">
+                            <div key={q.key} class="sdoh-card">
+                                <lightning-input type="toggle" label={q.label} checked={q.checked} data-section="sdoh" data-field={q.key}
+                                    message-toggle-active="Yes" message-toggle-inactive="No" field-level-help={q.help} onchange={handleChange}></lightning-input>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="barrier-summary">
+                        <lightning-icon icon-name="utility:flag" size="x-small"></lightning-icon>
+                        <span>{barrierSummary}</span>
+                    </div>
+                    <lightning-textarea label="Screening notes" value={form.sdoh.notes} data-section="sdoh" data-field="notes" max-length="1000"
+                        field-level-help="Anything the team should know. Example: Son drives her on weekends only; prefers Saturday lab slots." onchange={handleChange}></lightning-textarea>
+                </template>
+
+                <!-- ============================================ STEP 4: Consent -->
+                <template lwc:if={isStep4}>
+                    <div class="consent-text">
+                        <p class="consent-text__title">Care Program Participation Consent</p>
+                        <p>
+                            I agree to join the care program. I understand my care team will review my health information, contact me about tests and
+                            appointments, and share information with my doctors to coordinate my care. I can withdraw at any time.
+                        </p>
+                    </div>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                            <lightning-input type="checkbox" label="Patient gives program consent" checked={form.consent.programConsent} required
+                                data-section="consent" data-field="programConsent" message-when-value-missing="Consent is required to enrol the patient."
+                                field-level-help="Required. Saved as a signed Authorization Form Consent linked to the program enrolment." onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                            <lightning-input type="checkbox" label="OK to contact by phone / SMS" checked={form.consent.contactConsent}
+                                data-section="consent" data-field="contactConsent"
+                                field-level-help="Optional. Without it, outreach must go through letters or clinic visits." onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                            <lightning-combobox label="How was consent captured?" value={form.consent.capturedSource} options={consentSources} required
+                                data-section="consent" data-field="capturedSource"
+                                field-level-help="Stored for audit (HIPAA). Example: Phone if you read the text on a call." onchange={handleDetailChange}></lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+
+                <!-- ============================================ STEP 5: Program -->
+                <template lwc:if={isStep5}>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                            <lightning-combobox label="Care program" value={form.program.careProgramId} options={setup.carePrograms} required
+                                placeholder="Select a program" data-section="program" data-field="careProgramId"
+                                field-level-help="The program the patient joins (creates a Care Program Enrollee). Example: Diabetes Management Program" onchange={handleDetailChange}></lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" medium-device-size="6" padding="around-small">
+                            <lightning-combobox label="Care plan template" value={carePlanTemplateValue} options={carePlanTemplateOptions}
+                                data-section="program" data-field="carePlanTemplateId"
+                                field-level-help="Optional. Creates a care coordination case and an active care plan from this template. Example: Type 2 Diabetes Care Plan" onchange={handleDetailChange}></lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" padding="around-small">
+                            <lightning-input type="toggle" label="Schedule a welcome call" checked={form.program.scheduleWelcomeCall}
+                                data-section="program" data-field="scheduleWelcomeCall" message-toggle-active="Yes" message-toggle-inactive="No"
+                                field-level-help="Creates a task due in 2 days to introduce the care team." onchange={handleChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </template>
+
+                <!-- ============================================ STEP 6: Review -->
+                <template lwc:if={isStep6}>
+                    <div class="review-grid">
+                        <section class="review-card">
+                            <header class="review-card__head"><span>Patient</span><lightning-button variant="base" label="Edit" data-step="1" onclick={handleGoToStep}></lightning-button></header>
+                            <dl>
+                                <dt>Name</dt><dd>{review.patientName}</dd>
+                                <dt>Date of birth</dt><dd>{review.birthDate}</dd>
+                                <dt>MRN</dt><dd>{review.mrn}</dd>
+                                <dt>Contact</dt><dd>{review.contact}</dd>
+                            </dl>
+                        </section>
+                        <section class="review-card">
+                            <header class="review-card__head"><span>Clinical</span><lightning-button variant="base" label="Edit" data-step="2" onclick={handleGoToStep}></lightning-button></header>
+                            <dl>
+                                <dt>Diagnoses</dt><dd>{review.conditions}</dd>
+                                <dt>HbA1c</dt><dd>{review.hba1c}</dd>
+                            </dl>
+                        </section>
+                        <section class="review-card">
+                            <header class="review-card__head"><span>Social needs</span><lightning-button variant="base" label="Edit" data-step="3" onclick={handleGoToStep}></lightning-button></header>
+                            <template lwc:if={review.hasBarriers}>
+                                <ul class="barrier-list">
+                                    <template for:each={review.barriers} for:item="b"><li key={b}>{b}</li></template>
+                                </ul>
+                            </template>
+                            <template lwc:else><p class="slds-text-color_weak">No barriers identified.</p></template>
+                        </section>
+                        <section class="review-card">
+                            <header class="review-card__head"><span>Consent</span><lightning-button variant="base" label="Edit" data-step="4" onclick={handleGoToStep}></lightning-button></header>
+                            <dl>
+                                <dt>Program</dt><dd><span class={consentPillClass}>{review.programConsent}</span></dd>
+                                <dt>Phone / SMS</dt><dd>{review.contactConsent}</dd>
+                                <dt>Captured via</dt><dd>{review.consentSource}</dd>
+                            </dl>
+                        </section>
+                        <section class="review-card review-card_wide">
+                            <header class="review-card__head"><span>Program</span><lightning-button variant="base" label="Edit" data-step="5" onclick={handleGoToStep}></lightning-button></header>
+                            <dl>
+                                <dt>Care program</dt><dd>{review.program}</dd>
+                                <dt>Care plan</dt><dd>{review.carePlan}</dd>
+                                <dt>Welcome call</dt><dd>{review.welcomeCall}</dd>
+                            </dl>
+                        </section>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ================================================= Footer buttons -->
+            <div slot="footer" class="wizard-footer">
+                <template lwc:if={isSaving}>
+                    <lightning-spinner alternative-text="Saving onboarding" size="medium"></lightning-spinner>
+                </template>
+                <lightning-button label="Back" icon-name="utility:chevronleft" onclick={handleBack} disabled={isFirstStep}></lightning-button>
+                <template lwc:if={isLastStep}>
+                    <lightning-button variant="brand" label="Submit & enrol" icon-name="utility:check" icon-position="right" onclick={handleSubmit} disabled={isSaving}></lightning-button>
+                </template>
+                <template lwc:else>
+                    <lightning-button variant="brand" label="Next" icon-name="utility:chevronright" icon-position="right" onclick={handleNext}></lightning-button>
+                </template>
+            </div>
+        </template>
+        <template lwc:else>
+            <!-- ============================================= Success screen -->
+            <div class="success">
+                <div class="success__badge"><lightning-icon icon-name="utility:success" variant="inverse" size="medium"></lightning-icon></div>
+                <h3 class="success__title">{result.patientName} is onboarded</h3>
+                <p class="slds-text-color_weak">Enrolled in the care program. The nightly care-gap job will include them from tonight.</p>
+                <div class="stats">
+                    <template for:each={successStats} for:item="s">
+                        <div key={s.key} class="stat">
+                            <lightning-icon icon-name={s.icon} size="small"></lightning-icon>
+                            <span class="stat__value">{s.value}</span>
+                            <span class="stat__label">{s.label}</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="success__actions">
+                    <lightning-button variant="brand" label="Open patient record" onclick={handleViewPatient}></lightning-button>
+                    <lightning-button label="Onboard another patient" onclick={handleStartOver}></lightning-button>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>
