@@ -1,0 +1,260 @@
+<!--
+    patient360.html
+    Header (identity + risk gauge) → 4 KPI tiles → section grid.
+    The section grid uses CSS grid auto-fit, so it reflows to the width of the page region it sits in.
+    Every row that links to a record has role="button", tabindex="0" and a keyboard handler.
+-->
+<template>
+    <article class="p360">
+        <!-- ============================================ Loading skeleton -->
+        <template lwc:if={isLoading}>
+            <div class="skeleton" aria-busy="true" aria-label="Loading Patient 360">
+                <div class="bone bone_hero"></div>
+                <div class="skeleton__row"><div class="bone bone_kpi"></div><div class="bone bone_kpi"></div><div class="bone bone_kpi"></div><div class="bone bone_kpi"></div></div>
+                <div class="skeleton__grid"><div class="bone bone_card"></div><div class="bone bone_card"></div><div class="bone bone_card"></div></div>
+            </div>
+        </template>
+
+        <!-- ============================================ Error -->
+        <template lwc:if={error}>
+            <div class="error" role="alert">
+                <lightning-icon icon-name="utility:error" variant="error" size="small"></lightning-icon>
+                <span>{error}</span>
+            </div>
+        </template>
+
+        <template lwc:if={patient}>
+            <!-- ======================================== Header -->
+            <header class="hero">
+                <div class="hero__identity">
+                    <div class="avatar" aria-hidden="true">{initials}</div>
+                    <div class="hero__text">
+                        <p class="hero__eyebrow">Patient 360</p>
+                        <h2 class="hero__name">{patient.name}</h2>
+                        <div class="chips">
+                            <span class="chip"><lightning-icon icon-name="utility:identity" size="xx-small" variant="inverse"></lightning-icon>MRN {patient.mrn}</span>
+                            <span class="chip"><lightning-icon icon-name="utility:date_input" size="xx-small" variant="inverse"></lightning-icon>{ageLabel}</span>
+                            <template lwc:if={patient.city}>
+                                <span class="chip"><lightning-icon icon-name="utility:location" size="xx-small" variant="inverse"></lightning-icon>{patient.city}</span>
+                            </template>
+                        </div>
+                        <div class="contact">
+                            <template lwc:if={phoneHref}>
+                                <a href={phoneHref} class="contact__link"><lightning-icon icon-name="utility:call" size="xx-small" variant="inverse"></lightning-icon>{patient.phone}</a>
+                            </template>
+                            <template lwc:if={emailHref}>
+                                <a href={emailHref} class="contact__link"><lightning-icon icon-name="utility:email" size="xx-small" variant="inverse"></lightning-icon>{patient.email}</a>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk gauge: background ring + coloured arc (length = score %) -->
+                <div class="hero__risk">
+                    <div class="gauge" title="Risk score 0–100, recalculated every night">
+                        <svg viewBox="0 0 80 80" class="gauge__svg" role="img" aria-label="Risk score">
+                            <circle cx="40" cy="40" r="34" class="gauge__track"></circle>
+                            <circle cx="40" cy="40" r="34" class={gaugeClass} stroke-dasharray={gaugeDash} transform="rotate(-90 40 40)"></circle>
+                        </svg>
+                        <div class="gauge__label">
+                            <span class="gauge__value">{riskScoreLabel}</span>
+                            <span class="gauge__caption">risk</span>
+                        </div>
+                    </div>
+                    <div class="hero__flags">
+                        <span class={riskPillClass}>{patient.riskLevel} risk</span>
+                        <template lwc:if={patient.careGapOpen}>
+                            <span class="pill pill_gap"><lightning-icon icon-name="utility:warning" size="xx-small"></lightning-icon> Care gap open</span>
+                        </template>
+                        <template lwc:else>
+                            <span class="pill pill_ok">No care gap</span>
+                        </template>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ======================================== Actions -->
+            <div class="toolbar">
+                <lightning-button label="Log outreach call" icon-name="utility:call" variant="brand" onclick={toggleOutreach}></lightning-button>
+                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" title="Refresh" onclick={handleRefresh}></lightning-button-icon>
+            </div>
+            <template lwc:if={showOutreach}>
+                <div class="outreach">
+                    <lightning-textarea label="Call notes" value={outreachNotes} required max-length="2000" onchange={handleNotesChange}
+                        field-level-help="What was discussed and agreed. Example: Booked HbA1c test for Saturday; son will drive her."></lightning-textarea>
+                    <div class="outreach__actions">
+                        <lightning-button label="Cancel" onclick={toggleOutreach}></lightning-button>
+                        <lightning-button label="Save call" variant="brand" onclick={handleSaveOutreach} disabled={isSaving}></lightning-button>
+                    </div>
+                </div>
+            </template>
+
+            <!-- ======================================== KPI tiles -->
+            <div class="kpis">
+                <template for:each={kpis} for:item="k">
+                    <div key={k.key} class={k.tileClass}>
+                        <div class="kpi__head">
+                            <lightning-icon icon-name={k.icon} size="x-small" class="kpi__icon"></lightning-icon>
+                            <span class="kpi__label">{k.label}</span>
+                            <lightning-helptext content={k.help}></lightning-helptext>
+                        </div>
+                        <p class="kpi__value">{k.value}</p>
+                        <p class="kpi__sub">{k.sub}</p>
+                    </div>
+                </template>
+            </div>
+
+            <!-- ======================================== Sections -->
+            <div class="grid">
+                <!-- HbA1c trend -->
+                <section class="card card_wide">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:metrics" size="small"></lightning-icon>
+                        <h3 class="card__title">HbA1c trend</h3>
+                        <lightning-helptext content="Each dot is a lab result. Dashed line = 7% target. Green below 7, amber 7–7.9, red 8 and above."></lightning-helptext>
+                    </header>
+                    <template lwc:if={hasHistory}>
+                        <svg viewBox={chart.viewBox} class="chart" role="img" aria-label="HbA1c results over time">
+                            <line x1="34" x2={chart.axisX2} y1={chart.axisY} y2={chart.axisY} class="chart__axis"></line>
+                            <line x1="34" x2={chart.axisX2} y1={chart.targetY} y2={chart.targetY} class="chart__target"></line>
+                            <text x={chart.axisX2} y={chart.targetLabelY} class="chart__target-label" text-anchor="end">7% target</text>
+                            <polygon points={chart.area} class="chart__area"></polygon>
+                            <polyline points={chart.line} class="chart__line"></polyline>
+                            <template for:each={chart.points} for:item="pt">
+                                <g key={pt.key}>
+                                    <circle cx={pt.cx} cy={pt.cy} r="5" class={pt.dotClass}><title>{pt.title}</title></circle>
+                                    <text x={pt.cx} y={pt.labelY} class="chart__value" text-anchor="middle">{pt.value}</text>
+                                    <text x={pt.cx} y={pt.dateY} class="chart__date" text-anchor="middle">{pt.date}</text>
+                                </g>
+                            </template>
+                        </svg>
+                        <p class="card__note">{trendText}</p>
+                    </template>
+                    <template lwc:else>
+                        <p class="empty">No HbA1c results yet. The nightly job will flag a care gap.</p>
+                    </template>
+                </section>
+
+                <!-- Diagnoses -->
+                <section class="card">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:medication" size="small"></lightning-icon>
+                        <h3 class="card__title">Diagnoses</h3>
+                        <span class="count">{patient.conditions.length}</span>
+                    </header>
+                    <template lwc:if={hasConditions}>
+                        <ul class="list">
+                            <template for:each={conditions} for:item="c">
+                                <li key={c.id} class="row" role="button" tabindex="0" data-id={c.id} onclick={handleOpenRecord} onkeydown={handleRowKey}>
+                                    <div class="row__main">
+                                        <span class="row__title">{c.name}</span>
+                                        <span class="row__sub">{c.sourceLabel} {c.onset}</span>
+                                    </div>
+                                    <span class={c.statusClass}>{c.status}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p class="empty">No diagnoses recorded.</p></template>
+                </section>
+
+                <!-- Programs + consent -->
+                <section class="card">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:care_request_reviewer" size="small"></lightning-icon>
+                        <h3 class="card__title">Care programs</h3>
+                        <span class="count">{patient.programs.length}</span>
+                    </header>
+                    <template lwc:if={hasPrograms}>
+                        <ul class="list">
+                            <template for:each={programs} for:item="p">
+                                <li key={p.enrolleeId} class="row row_stack" role="button" tabindex="0" data-id={p.enrolleeId} onclick={handleOpenRecord} onkeydown={handleRowKey}>
+                                    <div class="row__line">
+                                        <span class="row__title">{p.name}</span>
+                                        <span class={p.statusClass}>{p.status}</span>
+                                    </div>
+                                    <span class="row__sub">{p.enrolled}</span>
+                                    <span class="consent">
+                                        <lightning-icon icon-name={p.consentIcon} variant={p.consentVariant} size="xx-small"></lightning-icon>
+                                        {p.consentText} · {p.contactText}
+                                    </span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p class="empty">Not enrolled in a program. Use Enrol in Program on this page.</p></template>
+                </section>
+
+                <!-- SDOH -->
+                <section class="card">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:social" size="small"></lightning-icon>
+                        <h3 class="card__title">Social needs</h3>
+                        <lightning-helptext content="Social determinants of health (SDOH) recorded as Care Barriers. Plan care around them, e.g. arrange transport for lab visits."></lightning-helptext>
+                        <span class="count">{patient.barriers.length}</span>
+                    </header>
+                    <template lwc:if={hasBarriers}>
+                        <ul class="list">
+                            <template for:each={barriers} for:item="b">
+                                <li key={b.id} class={b.rowClass} role="button" tabindex="0" data-id={b.id} onclick={handleOpenRecord} onkeydown={handleRowKey}>
+                                    <div class="row__main">
+                                        <span class="row__title">{b.title}</span>
+                                        <span class="row__sub">{b.detail}</span>
+                                    </div>
+                                    <span class={b.statusClass}>{b.status}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p class="empty">No social barriers recorded.</p></template>
+                </section>
+
+                <!-- Care plans -->
+                <section class="card">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:care_request_reviewer" size="small"></lightning-icon>
+                        <h3 class="card__title">Care plans</h3>
+                        <span class="count">{patient.carePlans.length}</span>
+                    </header>
+                    <template lwc:if={hasCarePlans}>
+                        <ul class="list">
+                            <template for:each={carePlans} for:item="cp">
+                                <li key={cp.id} class="row" role="button" tabindex="0" data-id={cp.id} onclick={handleOpenRecord} onkeydown={handleRowKey}>
+                                    <div class="row__main">
+                                        <span class="row__title">{cp.title}</span>
+                                        <span class="row__sub">{cp.detail}</span>
+                                    </div>
+                                    <span class={cp.statusClass}>{cp.status}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p class="empty">No care plan yet.</p></template>
+                </section>
+
+                <!-- Open tasks -->
+                <section class="card">
+                    <header class="card__head">
+                        <lightning-icon icon-name="standard:task" size="small"></lightning-icon>
+                        <h3 class="card__title">Open tasks</h3>
+                        <span class="count">{patient.openTasks.length}</span>
+                    </header>
+                    <template lwc:if={hasTasks}>
+                        <ul class="list">
+                            <template for:each={openTasks} for:item="t">
+                                <li key={t.id} class={t.rowClass} role="button" tabindex="0" data-id={t.id} onclick={handleOpenRecord} onkeydown={handleRowKey}>
+                                    <lightning-icon icon-name={t.icon} size="x-small" class="row__icon"></lightning-icon>
+                                    <div class="row__main">
+                                        <span class="row__title">{t.title}</span>
+                                        <span class="row__sub">{t.due}</span>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                    <template lwc:else><p class="empty">Nothing to do. All caught up.</p></template>
+                </section>
+            </div>
+        </template>
+    </article>
+</template>
